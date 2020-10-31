@@ -5,6 +5,7 @@
 xor ax,ax 				;making ax equal to 0
 mov ds,ax				;resetting segments just to make sure we're not messing up with adresses
 mov es,ax
+mov cs,ax
 cli					;we don't want interrupts while changing ss:sp of course
 mov ss,ax
 mov sp,0x7c00				;setting up stack, memory below it is free to use
