@@ -1,25 +1,6 @@
-[BITS 16]
-[ORG 0x7e00]
-
-push msg
-call print_string
-mov ax,dx
-push ax
-call print_hex_byte
-xchg al,ah
-push ax
-call print_hex_byte
-jmp $
-hlt		;this makes a real system halt
-ret     ;this makes qemu halt, to ensure everything works we add both
-	
-msg db "Hello World!",13,10,0	;null terminated string
-
-;-----------------------
-; functions start here
-;-----------------------
-
-print_string:	;parameter: address of the desired string to be printed
+%ifndef PRINTING_ASM
+%define PRINTING_ASM
+print_string:      ;parameter: address of the desired string to be printed
 	push bp
 	mov bp,sp
 	push ax
@@ -74,12 +55,6 @@ print_hex_byte:                      ;parameter is 16 bit value but it prints on
 	pop bx
 	pop ax
 	pop bp
-	ret 2		
-
-
-
-TIMES 512-($-$$) db 0
-
-
-
-
+	ret 2	
+	
+%endif	 

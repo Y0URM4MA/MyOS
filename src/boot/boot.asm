@@ -20,18 +20,24 @@ mov cl,2			;setting the sector number to read from.
 mov dh,0			;setting the head number.
 mov bx,0x7e00			;es:bx is the address in ram where the interrupt will load the kernel to. 
 int 0x13
+jc DISK_ERROR
 jmp 0x7e00
+DISK_ERROR:
+push DISK_ERROR_MSG
+call print_string
+jmp $
 
 ;-----------------------
 ; data start here
 ;-----------------------
 
 driveNumber db 0	
+DISK_ERROR_MSG db "Error reading disk, please try to turn of your pc and boot it again",13,10,0
 
 ;-----------------------
 ; functions start here
 ;-----------------------
-	
+%include "printing.asm"	
 
 
 
