@@ -1,6 +1,7 @@
 %ifndef PRINTING_ASM
 %define PRINTING_ASM
 print_string:      ;parameter: address of the desired string to be printed
+
 	push bp
 	mov bp,sp
 	push ax
@@ -56,5 +57,35 @@ print_hex_byte:                      ;parameter is 16 bit value but it prints on
 	pop ax
 	pop bp
 	ret 2	
+	
+	[BITS 32]
+
+VIDEO_MEMORY equ 0xb8000
+ATTRIBUTES db 0x0f
+
+	;prints null-terminated string in protected mode using memory
+	;parametrs: address of first char in string
+print_string32:	
+	push ebp
+	mov ebp,esp
+	push edx
+	push esi
+	push eax
+	mov edx,VIDEO_MEMORY	;VGA address
+	mov ah,[ATTRIBUTES]	;background and foreground colors
+	mov esi,[ebp+8] ;[ebp+8] is the address of first string char
+print:
+	lodsb		;AL has now the ascii char
+	cmp al,0	
+	je done
+	mov [edx],ax
+	add edx,2
+	jmp print
+done:
+	pop eax
+	pop esi
+	pop edx
+	pop ebp
+	ret 4
 	
 %endif	 

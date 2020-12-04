@@ -7,38 +7,37 @@ mov ds,ax			;resetting segments just to make sure we're not messing up with adre
 mov es,ax
 cli				;we don't want interrupts while changing ss:sp of course
 mov ss,ax
-mov sp,0x7c00			;setting up stack, memory below it is free to use
+mov sp,0x7c00
+mov bp,sp			;setting up stack, memory below it is free to use
 sti
 
-	
-mov [driveNumber],dl		;saving the drive number in variable, when BIOS loads the bootloader it saves the drive number in dl for further usage                    
-int 0x13 			;ah already equals to 0, resseting the disk system, and pulling heads to track 0.
-mov ah,2			;setting ah to alert that the interrupt will read from disk.
-mov al,1			;setting the number of sectors to read.
-mov ch,0			;setting the track number to read from.
-mov cl,2			;setting the sector number to read from.
-mov dh,0			;setting the head number.
-mov bx,0x7e00			;es:bx is the address in ram where the interrupt will load the kernel to. 
-int 0x13
-jc DISK_ERROR
-jmp 0x7e00
-DISK_ERROR:
-push DISK_ERROR_MSG
+push real_mode_msg
 call print_string
+jmp switch_pm
 jmp $
 
+
+;-----------------------
+; Includes/Functions
+;-----------------------
+%include "printing.asm"
+%include "gdt.asm"
+%include "switch_to_pm.asm"	
+
+[BITS 32]
+PM:
+	push prot_mode_msg
+	call print_string32
+	jmp $
+	
 ;-----------------------
 ; data start here
 ;-----------------------
 
+real_mode_msg db "Started in Real Mode",0
+prot_mode_msg db "Got into Protected Mode successfully",0
 driveNumber db 0	
 DISK_ERROR_MSG db "Error reading disk, please try to turn of your pc and boot it again",13,10,0
-
-;-----------------------
-; functions start here
-;-----------------------
-%include "printing.asm"	
-
 
 
 TIMES 510-($-$$) db 0  			;filling up the rest of the boot sector with zeros 
