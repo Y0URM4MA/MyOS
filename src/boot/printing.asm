@@ -1,5 +1,6 @@
 %ifndef PRINTING_ASM
 %define PRINTING_ASM
+
 print_string:      ;parameter: address of the desired string to be printed
 
 	push bp

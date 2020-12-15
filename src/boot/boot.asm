@@ -1,6 +1,7 @@
 [BITS 16]
 [ORG 0x7c00]
 
+KERNEL_OFFSET equ 0x7e00
 
 xor ax,ax 			;making ax equal to 0
 mov ds,ax			;resetting segments just to make sure we're not messing up with adresses
@@ -10,9 +11,10 @@ mov ss,ax
 mov sp,0x7c00
 mov bp,sp			;setting up stack, memory below it is free to use
 sti
-
+mov [drive_number],dl
 push real_mode_msg
 call print_string
+call disk_load
 jmp switch_pm
 jmp $
 
@@ -22,12 +24,14 @@ jmp $
 ;-----------------------
 %include "printing.asm"
 %include "gdt.asm"
+%include "load_kernel.asm"
 %include "switch_to_pm.asm"	
 
 [BITS 32]
 PM:
 	push prot_mode_msg
 	call print_string32
+	call KERNEL_OFFSET 
 	jmp $
 	
 ;-----------------------
@@ -36,7 +40,7 @@ PM:
 
 real_mode_msg db "Started in Real Mode",0
 prot_mode_msg db "Got into Protected Mode successfully",0
-driveNumber db 0	
+drive_number db 0	
 DISK_ERROR_MSG db "Error reading disk, please try to turn of your pc and boot it again",13,10,0
 
 
