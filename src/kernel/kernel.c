@@ -1,8 +1,11 @@
-void do_something(){}
+#include "system.h"
+#include "screen.h"
+
 void main(){
 
-char* video_memory = (char*)0xb8000;
-*video_memory = 'X';
-do_something();
+clear_screen();
+init_cursor();
+kprint("Hello World");
+
 
 }
