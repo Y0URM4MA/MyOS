@@ -34,7 +34,7 @@ gdt_data: ;the  data  segment  descriptor
 
 gdt_end:
 
-; The  reason  for  putting a label  at the  end of the; GDT is so we can have  
+; The  reason  for  putting a label  at the  end of the GDT is so I can have  
 ; the  assembler  calculate
 ; the  size of the  GDT  for  the GDT  decriptor (below)
 ; GDT  descriptior
