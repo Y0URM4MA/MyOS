@@ -56,100 +56,100 @@ isr_common_stub:
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
     iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
-isr0:
+isr0: ;Division by zero error
     cli
     push byte 0    ; A normal ISR stub that pops a dummy error code to keep a
                    ; uniform stack frame    
     push byte 0
     jmp isr_common_stub
 
-isr1:
+isr1: ;Debug exceptions
     cli
     push byte 0    
     push byte 1
     jmp isr_common_stub
               
-isr2:
+isr2: ;Nonmaskable interrupt
     cli
     push byte 0    
     push byte 2
     jmp isr_common_stub
         
-isr3:
+isr3: ;Breakpoint
     cli
     push byte 0    
     push byte 3
     jmp isr_common_stub
         
-isr4:
+isr4: ;Overflow (INTO instruction)
     cli
     push byte 0    
     push byte 4
     jmp isr_common_stub
         
-isr5:
+isr5: ;Bounds check (BOUND instruction)
     cli
     push byte 0    
     push byte 5
     jmp isr_common_stub
         
-isr6:
+isr6: ;Invalid opcode
     cli
     push byte 0    
     push byte 6
     jmp isr_common_stub
         
-isr7:
+isr7: ;Coprocessor not available
     cli
     push byte 0
     push byte 7
     jmp isr_common_stub
         
-isr8:
+isr8: ;Double fault
     cli
     push byte 8    ; I don't push a value on the stack in this one!
                    ; It pushes one already! Use this type of stub for exceptions
                    ; that pushes error codes!
     jmp isr_common_stub
     
-isr9:
+isr9: ;(reserved)
     cli
     push byte 0    
     push byte 9
     jmp isr_common_stub
       
-isr10:
+isr10: ;Invalid TSS
     cli   
     push byte 10
     jmp isr_common_stub
       
-isr11:
+isr11: ;Segment not present
     cli    
     push byte 11
     jmp isr_common_stub
       
-isr12:
+isr12: ;Stack exception
     cli  
     push byte 12
     jmp isr_common_stub
       
-isr13:
+isr13: ;General protection
     cli   
     push byte 13
     jmp isr_common_stub
       
-isr14:
+isr14: ;Page fault
     cli
     push byte 14
     jmp isr_common_stub
       
-isr15:
+isr15: ;(reserved)
     cli
     push byte 0    
     push byte 15
     jmp isr_common_stub
       
-isr16:
+isr16: ;Coprecessor error
     cli
     push byte 0    
     push byte 16
@@ -161,25 +161,25 @@ isr17:
     push byte 17
     jmp isr_common_stub
       
-isr18:
+isr18: ;(reserved)
     cli
     push byte 0    
     push byte 18
     jmp isr_common_stub
       
-isr19:
+isr19: ;(reserved)
     cli
     push byte 0    
     push byte 19
     jmp isr_common_stub
       
-isr20:
+isr20: ;(reserved)
     cli
     push byte 0    
     push byte 20
     jmp isr_common_stub
       
-isr21:
+isr21: ;(reserved)
     cli
     push byte 0    
     push byte 21
@@ -197,49 +197,49 @@ isr23:
     push byte 23
     jmp isr_common_stub
       
-isr24:
+isr24: ;(reserved)
     cli
     push byte 0    
     push byte 24
     jmp isr_common_stub
       
-isr25:
+isr25: ;(reserved)
     cli
     push byte 0    
     push byte 25
     jmp isr_common_stub
       
-isr26:
+isr26: ;(reserved)
     cli
     push byte 0    
     push byte 26
     jmp isr_common_stub
       
-isr27:
+isr27: ;(reserved)
     cli
     push byte 0    
     push byte 27
     jmp isr_common_stub
       
-isr28:
+isr28: ;(reserved)
     cli
     push byte 0    
     push byte 28
     jmp isr_common_stub
       
-isr29:
+isr29: ;(reserved)
     cli
     push byte 0    
     push byte 29
     jmp isr_common_stub
       
-isr30:
+isr30: ;(reserved)
     cli
     push byte 0    
     push byte 30
     jmp isr_common_stub
       
-isr31:
+isr31: ;(reserved)
     cli
     push byte 0    
     push byte 31
