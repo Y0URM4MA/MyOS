@@ -1,7 +1,7 @@
 #include "screen.h"
 #include "system.h"
 
-void init_cursor(){
+void init_cursor(void){
 	// set maximum scan line register to 15
 	port_byte_out(REG_SCREEN_CTRL, 0x09);
 	port_byte_out(REG_SCREEN_DATA, 0x0F);
@@ -14,7 +14,7 @@ void init_cursor(){
 	set_cursor(0);
 }
 
-int get_cursor(){
+int get_cursor(void){
 	unsigned int position;
 	// requesting high byte of cursor position
 	port_byte_out(REG_SCREEN_CTRL,0x0e);
@@ -56,7 +56,7 @@ int handle_scrolling(int cursor_offset){
 	return cursor_offset;
 }
 
-void clear_screen(){
+void clear_screen(void){
 	memsetw((unsigned short*)(VIDEO_ADDRESS),0x0f20,MAX_ROWS*MAX_COLS);
 }
 

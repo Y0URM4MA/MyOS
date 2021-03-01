@@ -30,7 +30,52 @@
 [GLOBAL isr29]
 [GLOBAL isr30]
 [GLOBAL isr31]
+[GLOBAL isr32]
+[GLOBAL isr33]
+[GLOBAL isr34]
+[GLOBAL isr35]
+[GLOBAL isr36]
+[GLOBAL isr37]
+[GLOBAL isr38]
+[GLOBAL isr39]
+[GLOBAL isr40]
+[GLOBAL isr41]
+[GLOBAL isr42]
+[GLOBAL isr43]
+[GLOBAL isr44]
+[GLOBAL isr45]
+[GLOBAL isr46]
+[GLOBAL isr47]
+
+
 [EXTERN isr_handler]
+[EXTERN irq_handler]
+
+irq_common_stub:
+    pushad
+    push ds
+    push es
+    push fs
+    push gs
+    mov ax, 0x10   ; Load the Kernel Data Segment descriptor!
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov eax, esp   ; Push us the stack for access to the registers structure in isr.h file
+    push eax
+    mov eax, irq_handler
+    call eax       ; A special call, preserves the 'eip' register
+    pop eax
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popad
+    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+    sti
+    iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+
 
 isr_common_stub:
     pushad
@@ -54,6 +99,7 @@ isr_common_stub:
     pop ds
     popad
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+    sti
     iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
 isr0: ;Division by zero error
@@ -244,6 +290,109 @@ isr31: ;(reserved)
     push byte 0    
     push byte 31
     jmp isr_common_stub
+    
+
+; IRQ wrappers, there are two PICs so there are 16 wrappers
+
+isr32: ;IRQ 0 - System timer
+    cli
+    push byte 0
+    push byte 32
+    jmp irq_common_stub
+    
+isr33: ;IRQ 1 - keyboard
+    cli
+    push byte 0
+    push byte 33
+    jmp irq_common_stub
+    
+isr34: ;IRQ 2 - cascaded signals from IRQs 8–15
+    cli
+    push byte 0
+    push byte 34
+    jmp irq_common_stub
+    
+isr35:	;IRQ 3
+    cli
+    push byte 0
+    push byte 35
+    jmp irq_common_stub
+    
+isr36:	;IRQ 4
+    cli
+    push byte 0
+    push byte 36
+    jmp irq_common_stub
+    
+isr37:	;IRQ 5
+    cli
+    push byte 0
+    push byte 37
+    jmp irq_common_stub
+    
+isr38:	;IRQ 6 – floppy disk controller
+    cli
+    push byte 0
+    push byte 38
+    jmp irq_common_stub
+    
+isr39:	
+    cli
+    push byte 0
+    push byte 39
+    jmp irq_common_stub
+    
+isr40:
+    cli
+    push byte 0
+    push byte 40
+    jmp irq_common_stub
+    
+isr41:
+    cli
+    push byte 0
+    push byte 41
+    jmp irq_common_stub
+    
+isr42:
+    cli
+    push byte 0
+    push byte 42
+    jmp irq_common_stub
+    
+isr43:
+    cli
+    push byte 0
+    push byte 43
+    jmp irq_common_stub
+    
+isr44:
+    cli
+    push byte 0
+    push byte 44
+    jmp irq_common_stub
+    
+isr45:
+    cli
+    push byte 0
+    push byte 45
+    jmp irq_common_stub
+    
+isr46:	;IRQ 14 – primary ATA channel 
+    cli
+    push byte 0
+    push byte 46
+    jmp irq_common_stub
+    
+isr47:	;IRQ 15 – secondary ATA channel
+    cli
+    push byte 0
+    push byte 47
+    jmp irq_common_stub
+        
+    
+
+    
     
     
       

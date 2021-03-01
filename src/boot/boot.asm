@@ -11,7 +11,7 @@ mov ss,ax
 mov sp,0x7c00
 mov bp,sp			;setting up stack, memory below it is free to use
 sti
-mov [drive_number],dl
+mov [drive_number],dl		;saving the drive number in variable, when BIOS loads the bootloader it saves the drive number in dl for further usage 
 push real_mode_msg
 call print_string
 call disk_load

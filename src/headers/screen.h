@@ -18,13 +18,13 @@
 
 // Functions
 
-int get_cursor();
+int get_cursor(void);
 void set_cursor(int offset);
 int get_screen_offset(int cols,int rows);
 int handle_scrolling(int cursor_offset);
-void clear_screen();
+void clear_screen(void);
 void print_char(char character, int col, int row, char attribute_byte);
-void init_cursor();
+void init_cursor(void);
 void print_at(char* message , int col , int  row);
 void kprint(char* message);
 

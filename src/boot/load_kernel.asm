@@ -8,7 +8,7 @@ push ax
 push cx
 push dx
 push bx
-mov dl,[drive_number]	;saving the drive number in variable, when BIOS loads the bootloader it 									saves the drive number in dl for further usage                    
+mov dl,[drive_number]	                   
 int 0x13 			;ah already equals to 0, resseting the disk system, and pulling heads to track 0.
 mov ah,2			;setting ah to alert that the interrupt will read from disk.
 mov al,15			;setting the number of sectors to read.

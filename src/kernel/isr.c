@@ -3,7 +3,7 @@
 #include <screen.h>
 
 //variables:
-unsigned char *exception_messages[] =
+static unsigned char *const exception_messages[] =
 {
     "Division By Zero",
     "Debug",
@@ -39,6 +39,14 @@ unsigned char *exception_messages[] =
     "Reserved"
 };
 
+/* This array is an array of function pointers. I use
+*  this to handle custom IRQ handlers for a given IRQ */
+void *irq_routines[16] =
+{
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+
 void pic_init(){
 	//ICW1 bits:
     	//Bit 0 - Set to 1 so I can send ICW 4
@@ -68,9 +76,9 @@ void pic_init(){
 	port_byte_out((unsigned short)0x21,(unsigned char)0x01);
 	port_byte_out((unsigned short)0xa1,(unsigned char)0x01);
 	
-	//Nulling the data registers
-	port_byte_out((unsigned short)0x21,(unsigned char)0x0);
-	port_byte_out((unsigned short)0xa1,(unsigned char)0x0);
+	//nulling the ports enabling interrupts
+	port_byte_out((unsigned short)0x21,(unsigned char)0x00);
+	port_byte_out((unsigned short)0xa1,(unsigned char)0x00);
 }	
 	
 void isr_handler(registers_t *r){
@@ -83,5 +91,55 @@ if (r->int_no < 32){
     }	
 
 }
+
+// This installs a custom IRQ handler for the given IRQ 
+void irq_install_handler(int irq, void *handler)
+{
+    irq_routines[irq] = handler;
+}
+
+// This uninstalls the custom IRQ handler from the given IRQ
+void irq_uninstall_handler(int irq)
+{
+    irq_routines[irq] = 0;
+}
+
+
+void irq_handler(registers_t *r)
+{
+    void (*handler)(registers_t* r) = irq_routines[r->int_no - 32];
+    if(handler)
+    {
+    	handler(r);
+    }
+    if(r->int_no - 32 >=8 && r->int_no < 16)
+    {
+    	port_byte_out(0xA0,0x20);
+    }
+    
+    port_byte_out(0x20,0x20);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

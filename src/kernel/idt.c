@@ -1,6 +1,11 @@
 #include <idt.h>
 #include <system.h>
 #include <isr.h>
+
+idt_entry_struct idt_entries[256];
+idt_ptr_struct IDTR;
+
+
 void make_idt_gate(unsigned char count, unsigned int offset, unsigned char attr)
 {	// look at idt.h to understand idt gate structure.
 	idt_entries[count].offset_low = (unsigned short)offset;
@@ -10,7 +15,7 @@ void make_idt_gate(unsigned char count, unsigned int offset, unsigned char attr)
 	idt_entries[count].attributes = attr;
 }
 
-void make_idt()
+void make_idt(void)
 {
 	IDTR.size = (sizeof idt_entries) - 1;
 	IDTR.base = (unsigned int)&idt_entries;
@@ -49,7 +54,23 @@ void make_idt()
     	make_idt_gate((unsigned char)29, (unsigned int)isr29, (unsigned char)0x8E);
     	make_idt_gate((unsigned char)30, (unsigned int)isr30, (unsigned char)0x8E);
     	make_idt_gate((unsigned char)31, (unsigned int)isr31, (unsigned char)0x8E);
-
-	
+    	make_idt_gate((unsigned char)32, (unsigned int)isr32, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)33, (unsigned int)isr33, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)34, (unsigned int)isr34, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)35, (unsigned int)isr35, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)36, (unsigned int)isr36, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)37, (unsigned int)isr37, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)38, (unsigned int)isr38, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)39, (unsigned int)isr39, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)40, (unsigned int)isr40, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)41, (unsigned int)isr41, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)42, (unsigned int)isr42, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)43, (unsigned int)isr43, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)44, (unsigned int)isr44, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)45, (unsigned int)isr45, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)46, (unsigned int)isr46, (unsigned char)0x8E);
+    	make_idt_gate((unsigned char)47, (unsigned int)isr47, (unsigned char)0x8E);
+    	
 	asm volatile("lidtl (%0)" : : "r" (&IDTR));
+	asm volatile("sti");
 }	

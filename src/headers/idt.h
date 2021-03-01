@@ -21,10 +21,8 @@ typedef struct
 
 
 void make_idt_gate(unsigned char count, unsigned int offset, unsigned char attr);
-void make_idt();
+void make_idt(void);
 
-idt_entry_struct idt_entries[256];
-idt_ptr_struct IDTR;
 
 #endif
 

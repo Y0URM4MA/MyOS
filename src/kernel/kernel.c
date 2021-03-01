@@ -1,13 +1,20 @@
 #include "system.h"
 #include "screen.h"
 #include <idt.h>
+#include <isr.h>
+#include <pit.h>
 
 void main(){
-make_idt();
+
 clear_screen();
 init_cursor();
-asm volatile("int $0x0");
-for(;;);
+irq_install_handler(0, &timer_handler);
+pic_init();
+PIT_init(100);
+make_idt();
 
+
+while(1){
+}
 
 }
