@@ -77,8 +77,8 @@ void pic_init(){
 	port_byte_out((unsigned short)0xa1,(unsigned char)0x01);
 	
 	//nulling the ports enabling interrupts
-	port_byte_out((unsigned short)0x21,(unsigned char)0x00);
-	port_byte_out((unsigned short)0xa1,(unsigned char)0x00);
+	port_byte_out((unsigned short)0x21,(unsigned char)0xfc);
+	port_byte_out((unsigned short)0xa1,(unsigned char)0xff);
 }	
 	
 void isr_handler(registers_t *r){

@@ -4,7 +4,7 @@
 
 
 
-static unsigned int timer_ticks = 0;
+static unsigned volatile int timer_ticks = 0;
 
 // initialazing the pit to start counting.
 // takes a wanted frequency as a parameter
@@ -32,16 +32,15 @@ void PIT_init(unsigned int frequency){
 void timer_handler(registers_t *r){
 	// incrementing tick count.
 	timer_ticks++;
-	if(timer_ticks % 100 == 0)
-		kprint("1 sec passed\n");
+	//if(timer_ticks % 200 == 0)
+		//kprint("2 sec passed\n");
 }
 
 // sleep function which stops the system from exectuing any further commands.
 // takes number of ticks as the delay parameter, every tick takes 10 milliseconds.
 void sleep(int ticks){
-
 	unsigned int l_ticks = timer_ticks + ticks;
-	while(timer_ticks < l_ticks);
+	while(l_ticks > timer_ticks);
 
 }
 

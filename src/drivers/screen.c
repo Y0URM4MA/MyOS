@@ -49,7 +49,7 @@ int handle_scrolling(int cursor_offset){
 	memcpy((unsigned char*)(get_screen_offset(0,i-1) + VIDEO_ADDRESS), (unsigned char*)(get_screen_offset(0,i) + VIDEO_ADDRESS), MAX_COLS*2);
 	}
 	// setting last row to be empty
-	memsetw((unsigned short*)(get_screen_offset(0,MAX_ROWS-1) + VIDEO_ADDRESS), 0, 80);
+	memsetw((unsigned short*)(get_screen_offset(0,MAX_ROWS-1) + VIDEO_ADDRESS), 0x0f00, 80);
 	// moving the cursor back by one row
 	cursor_offset -= 2*MAX_COLS;
 	// return cursor offset after scrolling
@@ -57,7 +57,7 @@ int handle_scrolling(int cursor_offset){
 }
 
 void clear_screen(void){
-	memsetw((unsigned short*)(VIDEO_ADDRESS),0x0f20,MAX_ROWS*MAX_COLS);
+	memsetw((unsigned short*)(VIDEO_ADDRESS),0x0f00,MAX_ROWS*MAX_COLS);
 }
 
 void print_char(char character, int col, int row, char attribute_byte)
@@ -116,7 +116,25 @@ void  print_at(char* message , int col , int  row) {
 void kprint(char* message){
 print_at(message ,  -1,  -1);
 }		
-		
+
+void backspace(void) // used to remove the character behind the cursor (used when backspace is pressed).
+{
+	unsigned int pos = get_cursor();
+	if(pos != 0){ // if the cursor is not at the top left then change it
+		unsigned char *vidmem = (unsigned char*)VIDEO_ADDRESS;
+		vidmem[pos-2] = 0; // deleting the character behind the cursor
+		if((pos-2) % 160 == 0 ) // if the position of the cursor minus two would be at the first column starting from the left then set it to be there
+		set_cursor(pos-2);
+	
+		else{ // else, set it to be next to the first char I meet while going backwards.
+			while(vidmem[pos-2] == 0){
+			pos-=2;
+			}
+			set_cursor(pos);
+		}
+	}
+	
+}		
 		
 		
 		

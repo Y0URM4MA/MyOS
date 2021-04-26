@@ -24,6 +24,8 @@ void make_idt_gate(unsigned char count, unsigned int offset, unsigned char attr)
 void make_idt(void);
 
 
+
+
 #endif
 
 

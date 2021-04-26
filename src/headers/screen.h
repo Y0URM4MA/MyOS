@@ -27,5 +27,6 @@ void print_char(char character, int col, int row, char attribute_byte);
 void init_cursor(void);
 void print_at(char* message , int col , int  row);
 void kprint(char* message);
+void backspace(void);
 
 #endif

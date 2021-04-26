@@ -11,7 +11,7 @@ push bx
 mov dl,[drive_number]	                   
 int 0x13 			;ah already equals to 0, resseting the disk system, and pulling heads to track 0.
 mov ah,2			;setting ah to alert that the interrupt will read from disk.
-mov al,15			;setting the number of sectors to read.
+mov al,20			;setting the number of sectors to read.
 mov ch,0			;setting the track number to read from.
 mov cl,2			;setting the sector number to read from.
 mov dh,0			;setting the head number.
