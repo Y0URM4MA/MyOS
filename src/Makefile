@@ -16,7 +16,7 @@ kernel.bin: kernel/kernel_entry.o kernel/interrupt.o ${OBJ}
 # Generic  rule  for  compiling C code to an  object  file
 # For  simplicity , we C files  depend  on all  header  files.
 %.o : %.c ${HEADERS}
-	i386-elf-gcc -ffreestanding -I./headers -c -O0 $< -o $@
+	i386-elf-gcc -nostdlib -ffreestanding -I./headers -c -O0 $< -o $@
 
 kernel_entry.o: kernel/kernel_entry.asm
 	nasm $< -f elf -o $@

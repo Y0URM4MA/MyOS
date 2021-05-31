@@ -28,5 +28,6 @@ void init_cursor(void);
 void print_at(char* message , int col , int  row);
 void kprint(char* message);
 void backspace(void);
+void change_attribute(void);
 
 #endif

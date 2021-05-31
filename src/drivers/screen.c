@@ -1,6 +1,8 @@
 #include "screen.h"
 #include "system.h"
 
+char ATTRIBUTE = 0x0f;
+
 void init_cursor(void){
 	// set maximum scan line register to 15
 	port_byte_out(REG_SCREEN_CTRL, 0x09);
@@ -49,7 +51,7 @@ int handle_scrolling(int cursor_offset){
 	memcpy((unsigned char*)(get_screen_offset(0,i-1) + VIDEO_ADDRESS), (unsigned char*)(get_screen_offset(0,i) + VIDEO_ADDRESS), MAX_COLS*2);
 	}
 	// setting last row to be empty
-	memsetw((unsigned short*)(get_screen_offset(0,MAX_ROWS-1) + VIDEO_ADDRESS), 0x0f00, 80);
+	memsetw((unsigned short*)(get_screen_offset(0,MAX_ROWS-1) + VIDEO_ADDRESS), ATTRIBUTE * 0x100, 80);
 	// moving the cursor back by one row
 	cursor_offset -= 2*MAX_COLS;
 	// return cursor offset after scrolling
@@ -57,7 +59,7 @@ int handle_scrolling(int cursor_offset){
 }
 
 void clear_screen(void){
-	memsetw((unsigned short*)(VIDEO_ADDRESS),0x0f00,MAX_ROWS*MAX_COLS);
+	memsetw((unsigned short*)(VIDEO_ADDRESS),ATTRIBUTE * 0x100,MAX_ROWS*MAX_COLS);
 }
 
 void print_char(char character, int col, int row, char attribute_byte)
@@ -107,7 +109,7 @@ void  print_at(char* message , int col , int  row) {
 	// Loop  through  each  char of the  message  and  print  it.
 	int i = 0;
 	while(message[i] != 0){
-		print_char(message[i], col , row , WHITE_ON_BLACK);
+		print_char(message[i], col , row , ATTRIBUTE);
 		i++;
 		}
 }
@@ -120,7 +122,7 @@ print_at(message ,  -1,  -1);
 void backspace(void) // used to remove the character behind the cursor (used when backspace is pressed).
 {
 	unsigned int pos = get_cursor();
-	if(pos != 0){ // if the cursor is not at the top left then change it
+	if(pos != 0 && !(pos % 80 == 2 && *(char*)(VIDEO_ADDRESS+pos-2) == '>')){ // if the cursor is not at the top left then change it
 		unsigned char *vidmem = (unsigned char*)VIDEO_ADDRESS;
 		vidmem[pos-2] = 0; // deleting the character behind the cursor
 		if((pos-2) % 160 == 0 ) // if the position of the cursor minus two would be at the first column starting from the left then set it to be there
@@ -134,6 +136,15 @@ void backspace(void) // used to remove the character behind the cursor (used whe
 		}
 	}
 	
+}
+
+void change_attribute(void) // iterating through every attribute byte in the screen and changing it to the new value according the command parameter
+{
+	unsigned char *vidmem = (unsigned char*)VIDEO_ADDRESS + 1;
+	for(int i = 0; i < 2000; i++){
+		*vidmem = ATTRIBUTE;
+		vidmem += 2;
+	}	
 }		
 		
 		
